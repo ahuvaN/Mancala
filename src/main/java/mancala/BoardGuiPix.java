@@ -32,7 +32,7 @@ public class BoardGuiPix extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private JPanel optionsPanel, gamePanel, statsPanel, cupsPanel, cupPanel1, cupPanel2, goalPanel1, goalPanel2;
-	private JButton newGameButton, rulesButton;
+	private JButton newGameButton;
 	private JComponent[] cupComponents;
 	private JLabel statsLabel1, statsLabel2, descriptionLabel;
 
@@ -61,7 +61,6 @@ public class BoardGuiPix extends JFrame {
 		statsPanel = new JPanel(new BorderLayout());
 
 		newGameButton = new JButton("New Game");
-		rulesButton = new JButton("Rules");
 		playerName1 = name1;
 		playerName2 = name2;
 		statsLabel1 = new JLabel(getPlayerName(1) + " Wins: " + wins1);
@@ -74,7 +73,7 @@ public class BoardGuiPix extends JFrame {
 		wins1 = 0;
 		wins2 = 0;
 
-		this.setIconImage(new ImageIcon(getClass().getResource("/icon.jpg")).getImage());
+		this.setIconImage(new ImageIcon(getClass().getResource("/mancala.jpg")).getImage());
 		border = new LineBorder(Color.black, 8, true);
 		font1 = new Font("Rockwell Extra Bold", Font.PLAIN, 28);
 		font2 = new Font("Calibri", Font.PLAIN, 38);
@@ -91,10 +90,7 @@ public class BoardGuiPix extends JFrame {
 		newGameButton.setFont(font1);
 		newGameButton.setBackground(Color.black);
 		newGameButton.setForeground(Color.red);
-		rulesButton.setFont(font1);
-		rulesButton.setBackground(Color.black);
-		rulesButton.setForeground(Color.red);
-
+	
 		gamePanel.setBorder(border);
 
 		cupsPanel.setLayout(new BoxLayout(cupsPanel, BoxLayout.Y_AXIS));
@@ -136,7 +132,6 @@ public class BoardGuiPix extends JFrame {
 
 	public void add() {
 		optionsPanel.add(newGameButton);
-		optionsPanel.add(rulesButton);
 		add(optionsPanel, BorderLayout.NORTH);
 
 		cupsPanel.add(cupPanel2);
@@ -274,13 +269,6 @@ public class BoardGuiPix extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				resetBoard();
 				resetCups();
-			}
-		});
-		rulesButton.addActionListener(new ActionListener() {
-			// @Override
-			public void actionPerformed(ActionEvent e) {
-				RulesFrame rulesFrame = new RulesFrame();
-				rulesFrame.setVisible(true);
 			}
 		});
 	}

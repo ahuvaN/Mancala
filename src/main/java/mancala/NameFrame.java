@@ -47,7 +47,7 @@ public class NameFrame extends JFrame {
 
 		backgroundLabel = new JLabel(new ImageIcon(new ImageIcon(getClass()
 				.getResource("/background4.jpg")).getImage().getScaledInstance(
-				getWidth(), getHeight(), 10)));
+						getWidth(), getHeight(), 10)));
 
 		playersPanel = new JPanel();
 		playerPanel1 = new JPanel();
@@ -157,6 +157,9 @@ public class NameFrame extends JFrame {
 		Injector injector = Guice.createInjector(new MancalaModule());
 		NameFrame frame = injector.getInstance(NameFrame.class);
 		frame.setVisible(true);
+		// new NameFrame().setVisible(true);
+		// injector.Inject...
+		// new BoardGuiNumbers("a", "b").setVisible(true);
 	}
 
 }

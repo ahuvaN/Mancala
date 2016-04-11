@@ -26,7 +26,7 @@ public class BoardGuiNumbers extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private JPanel options, game, stats, cupsPanel, cupPanel1, cupPanel2, goalPanel1, goalPanel2;
-	private JButton newGame, rules;
+	private JButton newGame;
 	private JLabel stats1, stats2, description;
 	private JLabel[] cups;
 
@@ -59,7 +59,6 @@ public class BoardGuiNumbers extends JFrame {
 		stats2 = new JLabel(getPlayerName(2) + " Wins: " + wins2);
 		description = new JLabel();
 		newGame = new JButton("New Game");
-		rules = new JButton("Rules");
 
 		board = new Board();
 		wins1 = 0;
@@ -114,10 +113,7 @@ public class BoardGuiNumbers extends JFrame {
 		newGame.setBackground(Color.red);
 		newGame.setFont(font2);
 		newGame.setForeground(Color.black);
-		rules.setBackground(Color.red);
-		rules.setFont(font2);
-		rules.setForeground(Color.black);
-
+	
 		stats.setBackground(Color.black);
 		stats1.setFont(font2);
 		stats1.setForeground(Color.red);
@@ -132,7 +128,6 @@ public class BoardGuiNumbers extends JFrame {
 
 	public void add() {
 		options.add(newGame);
-		options.add(rules);
 		add(options, BorderLayout.NORTH);
 
 		cupPanel1.add(Box.createRigidArea(new Dimension(1, 200)));
@@ -259,13 +254,6 @@ public class BoardGuiNumbers extends JFrame {
 			// @Override
 			public void actionPerformed(ActionEvent e) {
 				resetBoard();
-			}
-		});
-		rules.addActionListener(new ActionListener() {
-			// @Override
-			public void actionPerformed(ActionEvent e) {
-				RulesFrame rulesFrame = new RulesFrame();
-				rulesFrame.setVisible(true);
 			}
 		});
 	}
