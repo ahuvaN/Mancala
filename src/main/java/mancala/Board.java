@@ -13,10 +13,11 @@ public class Board {
 	private int start;
 	private int piecesWon;// by both combined
 
-	public Board() {
+	public Board(boolean comp) {
 		board = new Cup[14];
 		player1 = 1;
 		player2 = 2;
+		computer = comp;
 		currentPlayer = player1;
 		piecesWon = 0;
 

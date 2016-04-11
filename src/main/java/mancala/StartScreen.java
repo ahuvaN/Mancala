@@ -51,9 +51,13 @@ public class StartScreen extends JFrame {
 							public void mouseClicked(MouseEvent e) {
 								int x = e.getX();
 								int y = e.getY();
-								System.out.println("x: " + x + " y: " + y);
+								// System.out.println("x: " + x + " y: " + y);
 								if (x > 295 && x < 485 && y > 295 && y < 337) {
 									BoardGuiPix p = new BoardGuiPix("a", "b");
+									p.setVisible(true);
+								} else if (x > 321 && y > 219 && x < 479
+										&& y < 262) {
+									BoardGuiPix p = new BoardGuiPix("a", true);
 									p.setVisible(true);
 								}
 							}

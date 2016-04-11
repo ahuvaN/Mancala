@@ -25,17 +25,19 @@ public class BoardGuiNumbers extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JPanel options, game, stats, cupsPanel, cupPanel1, cupPanel2, goalPanel1, goalPanel2;
+	private JPanel options, game, stats, cupsPanel, cupPanel1, cupPanel2,
+			goalPanel1, goalPanel2;
 	private JButton newGame;
 	private JLabel stats1, stats2, description;
 	private JLabel[] cups;
 
 	private Board board;
 	private String player1Name, player2Name;
+	private boolean computer;
 	private int currentPlayer;
 	private int wins1, wins2, winner;
 
-	public BoardGuiNumbers(String name1, String name2) {
+	public BoardGuiNumbers(String name1, String name2, boolean comp) {
 		setTitle("Mancala");
 		setSize(1000, 700);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,12 +57,13 @@ public class BoardGuiNumbers extends JFrame {
 		cups = new JLabel[14];
 		player1Name = name1;
 		player2Name = name2;
+		computer = comp;
 		stats1 = new JLabel(getPlayerName(1) + " Wins: " + wins1);
 		stats2 = new JLabel(getPlayerName(2) + " Wins: " + wins2);
 		description = new JLabel();
 		newGame = new JButton("New Game");
 
-		board = new Board();
+		board = new Board(computer);
 		wins1 = 0;
 		wins2 = 0;
 		currentPlayer = 1;
@@ -96,6 +99,7 @@ public class BoardGuiNumbers extends JFrame {
 			if (i != 6 && i != 13) {
 				cups[i].putClientProperty("index", i);
 				cups[i].addMouseListener(new MouseAdapter() {
+					@Override
 					public void mouseClicked(MouseEvent event) {
 						JLabel label = (JLabel) event.getSource();
 						int index = (Integer) label.getClientProperty("index");
@@ -113,7 +117,7 @@ public class BoardGuiNumbers extends JFrame {
 		newGame.setBackground(Color.red);
 		newGame.setFont(font2);
 		newGame.setForeground(Color.black);
-	
+
 		stats.setBackground(Color.black);
 		stats1.setFont(font2);
 		stats1.setForeground(Color.red);
@@ -170,8 +174,8 @@ public class BoardGuiNumbers extends JFrame {
 		resetNumbers();
 		int piecesAdded = board.checkForMoves();
 		if (piecesAdded != 0) {
-			JOptionPane.showMessageDialog(null,
-					"Left over peices added to " + getPlayerName(piecesAdded) + "'s goal!!");
+			JOptionPane.showMessageDialog(null, "Left over peices added to "
+					+ getPlayerName(piecesAdded) + "'s goal!!");
 			resetNumbers();
 		}
 		if (board.checkGame()) {
@@ -218,7 +222,8 @@ public class BoardGuiNumbers extends JFrame {
 			description.setText("GREAT JOB " + getPlayerName(winner) + "!!!");
 			break;
 		case 3:
-			description.setText(getPlayerName(currentPlayer) + " landed in the goal- player goes again");
+			description.setText(getPlayerName(currentPlayer)
+					+ " landed in the goal- player goes again");
 			break;
 		case 4:
 			description.setText("Tie Game no one wins!");
@@ -252,6 +257,7 @@ public class BoardGuiNumbers extends JFrame {
 	public void addActionListeners() {
 		newGame.addActionListener(new ActionListener() {
 			// @Override
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				resetBoard();
 			}
@@ -275,12 +281,17 @@ public class BoardGuiNumbers extends JFrame {
 		if (player == 1) {
 			return player1Name;
 		} else {
-			return player2Name;
+			if (computer) {
+				return "Computer";
+			} else {
+				return player2Name;
+			}
 		}
 	}
 
-/*	public static void main(String[] args) {
-		new BoardGuiNumbers("LEAH", "ELISE").setVisible(true);
-	}*/
+	/*
+	 * public static void main(String[] args) { new BoardGuiNumbers("LEAH",
+	 * "ELISE").setVisible(true); }
+	 */
 
 }
