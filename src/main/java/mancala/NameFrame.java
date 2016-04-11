@@ -19,6 +19,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
+import com.google.inject.Guice;
+import com.google.inject.Inject;
+import com.google.inject.Injector;
+
 public class NameFrame extends JFrame {
 
 	/**
@@ -32,6 +36,7 @@ public class NameFrame extends JFrame {
 	private JButton okayButton;
 	private String name1, name2;
 
+	@Inject
 	public NameFrame() {
 		setTitle("Add Names");
 		setSize(900, 500);
@@ -40,8 +45,9 @@ public class NameFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setResizable(false);
 
-		backgroundLabel = new JLabel(new ImageIcon(new ImageIcon(getClass().getResource("/background4.jpg")).getImage()
-				.getScaledInstance(getWidth(), getHeight(), 10)));
+		backgroundLabel = new JLabel(new ImageIcon(new ImageIcon(getClass()
+				.getResource("/background4.jpg")).getImage().getScaledInstance(
+				getWidth(), getHeight(), 10)));
 
 		playersPanel = new JPanel();
 		playerPanel1 = new JPanel();
@@ -94,7 +100,8 @@ public class NameFrame extends JFrame {
 		playerField2.setBackground(Color.darkGray);
 		playerField2.setForeground(Color.orange);
 
-		okayButton.setIcon(new ImageIcon(formatIcon(80, 80, getClass().getResource("/yellow.png"))));
+		okayButton.setIcon(new ImageIcon(formatIcon(80, 80, getClass()
+				.getResource("/yellow.png"))));
 		okayButton.setBackground(Color.black);
 		okayButton.setBorder(new LineBorder(Color.yellow, 1, true));
 
@@ -111,23 +118,27 @@ public class NameFrame extends JFrame {
 
 	public Image formatIcon(int width, Integer height, URL image) {
 		ImageIcon icon = new ImageIcon(image);
-		Image img = icon.getImage().getScaledInstance(width, height, java.awt.Image.SCALE_SMOOTH);
+		Image img = icon.getImage().getScaledInstance(width, height,
+				java.awt.Image.SCALE_SMOOTH);
 		return img;
 	}
 
 	private void addListener() {
 		okayButton.addActionListener(new ActionListener() {
 
+			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				name1 = playerField1.getText().trim().toUpperCase();
 				name2 = playerField2.getText().trim().toUpperCase();
 				if (name1.length() == 0 || name2.length() == 0) {
-					JOptionPane.showMessageDialog(null, "You must enter a name for both players!!", "WARNING!",
-							JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"You must enter a name for both players!!",
+							"WARNING!", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
 				if (name1.length() > 10 || name2.length() > 10) {
-					JOptionPane.showMessageDialog(null, "Name can't be longer than 10 digits", "WARNING!",
+					JOptionPane.showMessageDialog(null,
+							"Name can't be longer than 10 digits", "WARNING!",
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				}
@@ -141,7 +152,11 @@ public class NameFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new NameFrame().setVisible(true);
+		// new NameFrame().setVisible(true);
+
+		Injector injector = Guice.createInjector(new MancalaModule());
+		NameFrame frame = injector.getInstance(NameFrame.class);
+		frame.setVisible(true);
 	}
 
 }
