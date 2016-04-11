@@ -21,8 +21,8 @@ public class GoalComponent extends CupComponent {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		g.setColor(Color.black);
-		g.fillOval(0, 0, 115, 450);
+		//g.setColor(Color.black);
+		//g.fillOval(0, 0, 115, 450);
 
 		for (int i = 0, j = -25; i < count; i++, j++) {
 			if (i < 25) {

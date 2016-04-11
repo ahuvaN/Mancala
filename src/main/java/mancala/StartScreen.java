@@ -28,10 +28,11 @@ public class StartScreen extends JFrame {
 		pic.setIcon(image);
 		add(pic);
 		setVisible(true);
+		setResizable(false);
 		setLayout(null);
 
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(3000);
 			changeIcon("/play.jpg");
 			image = new ImageIcon(img);
 			pic.setIcon(image);
@@ -52,8 +53,10 @@ public class StartScreen extends JFrame {
 								int x = e.getX();
 								int y = e.getY();
 								if (x > 295 && x < 485 && y > 295 && y < 337) {
-									BoardGuiPix p = new BoardGuiPix("a", "b");
+									
+									BoardScreen p = new BoardScreen();
 									p.setVisible(true);
+									dispose();
 								}
 							}
 

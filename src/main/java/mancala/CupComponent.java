@@ -41,9 +41,6 @@ public class CupComponent extends JComponent {
 	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
-		g.setColor(Color.black);
-		g.fillOval(0, 0, 100, 270);
-
 		for (int i = 0, j = -14; i < count; i++, j++) {
 			if (i < 14) {
 				g.drawImage(piece, 10, i * 15, this);
