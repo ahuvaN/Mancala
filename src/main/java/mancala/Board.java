@@ -8,6 +8,7 @@ public class Board {
 	private Cup[] board;
 	private int player1;
 	private int player2;
+	private boolean computer;
 	private int currentPlayer;
 	private int start;
 	private int piecesWon;// by both combined
