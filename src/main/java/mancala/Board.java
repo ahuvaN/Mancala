@@ -1,22 +1,17 @@
 package mancala;
 
 //logic of a computer mancala game 
-//preferred
 
 public class Board {
 
 	private Cup[] board;
-	private int player1;
-	private int player2;
 	private int currentPlayer;
 	private int start;
 	private int piecesWon;// by both combined
 
 	public Board() {
 		board = new Cup[14];
-		player1 = 1;
-		player2 = 2;
-		currentPlayer = player1;
+		currentPlayer = 1;
 		piecesWon = 0;
 
 		for (int i = 0; i < board.length; i++) {
@@ -32,17 +27,12 @@ public class Board {
 		for (int i = 0; i < board.length; i++) {
 			board[i].reset();
 		}
-		currentPlayer = player1;
+		currentPlayer = 1;
 		piecesWon = 0;
 	}
 
 	public int switchPlayer() {
-		if (currentPlayer == player2) {
-			currentPlayer = player1;
-		} else {
-			currentPlayer = player2;
-		}
-		return currentPlayer;
+		return currentPlayer == 1 ? 2 : 1;
 	}
 
 	public int getCurrentPlayer() {
@@ -50,15 +40,11 @@ public class Board {
 	}
 
 	public boolean checkGame() {
-		if (piecesWon == 48) {
-			return true;
-		} else {
-			return false;
-		}
+		 return piecesWon == 48;
 	}
 
 	public int calculateWinner() {
-		if (board[6].getCount() > board[13].getCount()) {
+		 if (board[6].getCount() > board[13].getCount()) {
 			return 1;
 		} else if (board[6].getCount() < board[13].getCount()) {
 			return 2;
@@ -76,14 +62,14 @@ public class Board {
 
 		for (int i = 0, position = start + 1; i < amount; i++, position++) {
 			if (position == 6) {
-				if (currentPlayer == player1) {
+				if (currentPlayer == 1) {
 					piecesWon++;
 					board[position].addPiece();
 				} else {
 					i--;
 				}
 			} else if (position == 13) {
-				if (currentPlayer == player2) {
+				if (currentPlayer == 2) {
 					piecesWon++;
 					board[position].addPiece();
 				} else {
@@ -105,13 +91,13 @@ public class Board {
 	private boolean checkTurn() {
 		int amount;
 		if (board[start].getCount() == 1) {
-			if (start > -1 && start < 6 && currentPlayer == player1) {
+			if (start > -1 && start < 6 && currentPlayer == 1) {
 				amount = board[start].removePieces();
 				amount = amount + board[Math.abs(start - 12)].removePieces();
 				System.out.println("amount is " + amount);
 				piecesWon = piecesWon + amount;
 				((Goal) board[6]).addToGoal(amount);
-			} else if (start > 6 && start < 13 && currentPlayer == player2) {
+			} else if (start > 6 && start < 13 && currentPlayer == 2) {
 				amount = board[start].removePieces();
 				amount = amount + board[12 - start].removePieces();
 				System.out.println("amount is " + amount);
@@ -121,12 +107,12 @@ public class Board {
 		}
 		// if ended by a goal returns true;
 		if (start == 6) {
-			if (currentPlayer == player1) {
+			if (currentPlayer == 1) {
 				return true;
 			}
 		}
 		if (start == 13) {
-			if (currentPlayer == player2) {
+			if (currentPlayer == 2) {
 				return true;
 			}
 		}

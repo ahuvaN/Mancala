@@ -1,4 +1,4 @@
-package mancala;
+/*package mancala;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -248,4 +248,4 @@ public class BoardGuiPix extends JFrame {
 		}
 	}
 
-}
+}*/
