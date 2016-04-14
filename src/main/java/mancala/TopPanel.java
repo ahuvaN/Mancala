@@ -77,6 +77,6 @@ public class TopPanel extends JPanel {
 	}
 
 	public static void main(String[] args) {
-		new BoardScreen().setVisible(true);
+		new BoardScreen(false).setVisible(true);
 	}
 }

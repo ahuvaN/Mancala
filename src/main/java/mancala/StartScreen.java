@@ -14,14 +14,14 @@ public class StartScreen extends JFrame {
 	private JLabel pic;
 	private ImageIcon frameIcon;
 	private Image img;
-	//private BoardScreen boardScreen;
+	//private BoardScreen screen;
 
 	//@Inject
 	public StartScreen(/*BoardScreen boardScreen*/) {
 		setTitle("Mancala");
 		setSize(800, 615);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//this.boardScreen = boardScreen;
+		//screen = boardScreen;
 		pic = new JLabel();
 		pic.setBounds(0, 0, 800, 615);
 
@@ -57,7 +57,12 @@ public class StartScreen extends JFrame {
 								int y = e.getY();
 								if (x > 295 && x < 485 && y > 295 && y < 337) {
 
-									BoardScreen p = new BoardScreen();
+									BoardScreen p = new BoardScreen(false);
+									p.setVisible(true);
+									dispose();
+								} else if (x > 321 && y > 219 && x < 479
+										&& y < 262) {
+									BoardScreen p = new BoardScreen(true);
 									p.setVisible(true);
 									dispose();
 								}
