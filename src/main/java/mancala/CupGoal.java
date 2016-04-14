@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 import javax.swing.JComponent;
 
-public class BowlGoal extends JComponent {
+public class CupGoal extends JComponent {
 
 	private ArrayList<Image> pieces;
 	private int originalCount;
 
-	public BowlGoal() {
+	public CupGoal() {
 		pieces = new ArrayList<Image>();
 		originalCount = 0;
 		setPreferredSize(new Dimension(160, 500));

@@ -80,9 +80,9 @@ public class GamePanel extends JPanel {
 	}
 
 	private void addSidePanel() {
-		BowlGoal west = new BowlGoal();
+		CupGoal west = new CupGoal();
 		add(west, BorderLayout.WEST);
-		BowlGoal east = new BowlGoal();
+		CupGoal east = new CupGoal();
 		add(east, BorderLayout.EAST);
 	}
 
