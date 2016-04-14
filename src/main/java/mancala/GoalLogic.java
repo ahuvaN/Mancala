@@ -1,8 +1,8 @@
 package mancala;
 
-public class Goal extends Cup {
+public class GoalLogic extends CupLogic {
 
-	public Goal() {
+	public GoalLogic() {
 		super();
 	}
 

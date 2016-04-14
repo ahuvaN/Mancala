@@ -35,7 +35,7 @@ public class StartScreen extends JFrame {
 		setLayout(null);
 
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 			changeIcon("/play.jpg");
 			image = new ImageIcon(img);
 			pic.setIcon(image);

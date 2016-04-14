@@ -1,30 +1,28 @@
 package mancala;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Container;
-import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class BoardScreen extends JFrame {
 
 	private Container container;
-	private TopPanel top;
-	private BottomPanel bottom; 
-	private CenterPanel center;
+	private TopPanel player2;
+	private BottomPanel player1; 
+	private GamePanel board;
+	private int player;
+	//private boolean computer;
 
 	
-	public BoardScreen() {
+	public BoardScreen(/*boolean cpu*/) {
 		setTitle("Mancala");
 		setSize(1100, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		//setLayout(new BorderLayout());
 		
 		setContentPane(new JLabel(new ImageIcon(getClass().getResource(
 				"/mancala board.jpg"))));
@@ -34,16 +32,17 @@ public class BoardScreen extends JFrame {
 		setIconImage(new ImageIcon(getClass().getResource("/mancala.jpg"))
 		.getImage());
 
+		player = 1;
 		addPanels();
 	}
 
 	private void addPanels() {
-		top = new TopPanel();
-		bottom = new BottomPanel();
-		center = new CenterPanel(top, bottom);
-		container.add(top, BorderLayout.PAGE_START);
-		container.add(bottom, BorderLayout.PAGE_END);
-		container.add(center, BorderLayout.CENTER);
+		player2 = new TopPanel();
+		player1 = new BottomPanel();
+		board = new GamePanel(player2, player1, player);
+		container.add(player2, BorderLayout.PAGE_START);
+		container.add(player1, BorderLayout.PAGE_END);
+		container.add(board, BorderLayout.CENTER);
 	}
 
 }
