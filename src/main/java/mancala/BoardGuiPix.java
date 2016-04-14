@@ -260,6 +260,9 @@ public class BoardGuiPix extends JFrame {
 			repaint();
 			if (computer && currentPlayer == 2) {
 				int computerTurn = rand.nextInt(13 - 7) + 7;
+				while (board.getContent(computerTurn) == 0) {
+					computerTurn = rand.nextInt(13 - 7) + 7;
+				}
 				turn(computerTurn);
 			}
 			return;
@@ -267,6 +270,9 @@ public class BoardGuiPix extends JFrame {
 		changeDescription(3);
 		if (computer && currentPlayer == 2) {
 			int computerTurn = rand.nextInt(13 - 7) + 7;
+			while (board.getContent(computerTurn) == 0) {
+				computerTurn = rand.nextInt(13 - 7) + 7;
+			}
 			turn(computerTurn);
 		}
 	}
