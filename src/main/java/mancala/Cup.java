@@ -18,13 +18,14 @@ public class Cup extends JComponent {
 	public Cup(int i, MouseListener listener, Piece[] pieceColors) {
 		pieces = new ArrayList<Image>();
 
-		setLayout(new FlowLayout()); // TODO
+		setLayout(new FlowLayout());
 		setName(String.valueOf(i));
 		setBackground(new Color(0, 0, 0, 0));
 		super.setBackground(new Color(0, 0, 0, 0));
 
 		setPreferredSize(new Dimension(110, 200));
-		addMouseListener(listener);
+		if(listener != null)
+			addMouseListener(listener);
 		originalCount = 4;
 
 		for (int x = 0; x < 4; x++) {
@@ -38,13 +39,13 @@ public class Cup extends JComponent {
 
 	public ArrayList<Image> removePieces() {
 		ArrayList<Image> images = new ArrayList<Image>();
-		while(pieces.size()>0){
+		while (pieces.size() > 0) {
 			images.add(pieces.remove(pieces.size() - 1));
 		}
 		return images;
 	}
-	
-	public Image removePiece(){
+
+	public Image removePiece() {
 		return pieces.remove(0);
 	}
 
@@ -65,7 +66,7 @@ public class Cup extends JComponent {
 				n -= i;
 				switch (z) {
 				case 0:
-					x += i - 2 *i;
+					x += i - 2 * i;
 					y += i;
 					break;
 				case 1:

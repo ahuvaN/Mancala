@@ -38,7 +38,7 @@ public class StartScreen extends JFrame {
 		setLayout(null);
 
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(700);
 			changeIcon("/play.jpg");
 			image = new ImageIcon(img);
 			pic.setIcon(image);
@@ -59,18 +59,12 @@ public class StartScreen extends JFrame {
 								int x = e.getX();
 								int y = e.getY();
 								if (x > 295 && x < 485 && y > 295 && y < 340) {
-									System.out.println(x + ", " + y);
-									// BoardScreen p = new BoardScreen(false);
-									// screen = boardScreen;
 									screen.setComputer(false);
 									screen.addPanels();
 									screen.setVisible(true);
 									dispose();
 								} else if (x > 321 && y > 219 && x < 479
 										&& y < 262) {
-									System.out.println(x + ", " + y);
-									// BoardScreen p = new BoardScreen(true);
-									// screen = boardScreen;
 									screen.setComputer(true);
 									screen.addPanels();
 									screen.setVisible(true);

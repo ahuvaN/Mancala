@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -16,6 +17,7 @@ public class TopPanel extends JPanel {
 	private JPanel pieceInfo;
 	protected JLabel[] labels;
 	private JLabel player2;
+	private String repeat;
 	private Font f;
 
 	public TopPanel() {
@@ -30,7 +32,7 @@ public class TopPanel extends JPanel {
 	}
 
 	private void addPieceInfo() {
-		String repeat = IntStream.range(0, 56).mapToObj(x -> "< ")
+		repeat = IntStream.range(0, 56).mapToObj(x -> "< ")
 				.collect(Collectors.joining());
 		player2 = new JLabel(repeat + "Player 2");
 		player2.setPreferredSize(new Dimension(40, 45));
@@ -61,12 +63,18 @@ public class TopPanel extends JPanel {
 
 	public void highlight() {
 		player2.setForeground(Color.BLUE);
+		player2.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
 	}
 
 	public void unHighlight() {
 		player2.setForeground(Color.YELLOW);
+		player2.setBorder(BorderFactory.createEmptyBorder());
 	}
 
+	public void setComputerLabel(){
+		player2.setText(repeat + "CPU");
+	}
+	
 	public void addValue(int position) {
 		int currVal = Integer.parseInt(labels[position].getText());
 		labels[position].setText(String.valueOf(++currVal));

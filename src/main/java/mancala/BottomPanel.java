@@ -8,9 +8,11 @@ import java.awt.GridLayout;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 public class BottomPanel extends JPanel {
 
@@ -59,10 +61,12 @@ public class BottomPanel extends JPanel {
 
 	public void highlight() {
 		player1.setForeground(Color.BLUE);
+		player1.setBorder(BorderFactory.createLineBorder(Color.BLUE, 3));
 	}
 
 	public void unHighlight() {
 		player1.setForeground(Color.YELLOW);
+		player1.setBorder(BorderFactory.createEmptyBorder());
 	}
 
 	public void addValue(int position) {
