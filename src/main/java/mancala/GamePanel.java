@@ -2,15 +2,12 @@ package mancala;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -24,15 +21,17 @@ public class GamePanel extends JPanel {
 	private BottomPanel botp;
 	private MouseListener listenerTop, listenerBot;
 	private int currentPlayer;
+	private boolean computer;
 	private BoardLogic board;
 
-	public GamePanel(TopPanel topP, BottomPanel botP, int p) {
+	public GamePanel(TopPanel topP, BottomPanel botP, int p, boolean cpu) {
 		super(new BorderLayout());
 		setBackground(this);
 
 		topp = topP;
 		botp = botP;
 		currentPlayer = p;
+		computer = cpu;
 		board = new BoardLogic(topp, botp);
 		pieces = new Piece[4];
 
@@ -72,8 +71,9 @@ public class GamePanel extends JPanel {
 			cupsBot[i] = new Cup(i, listenerBot, pieces);
 			bot.add(cupsBot[i]);
 		}
-		// if(computer)
-		// top.setEnabled(false);
+		/*
+		 * if (computer) { top.setEnabled(false); }
+		 */
 		add(boardGUI, BorderLayout.CENTER);
 		boardGUI.add(top);
 		boardGUI.add(bot);
@@ -107,9 +107,11 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				// if (!computer && currentPlayer == 2) {
 				Cup bowl = (Cup) e.getSource();
 				int pos = Integer.parseInt(bowl.getName());
 				turn(pos, true);
+				// }
 			}
 		};
 
@@ -133,10 +135,11 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// if (player == 1) {
+				// if (currentPlayer == 1) {
 				Cup bowl = (Cup) e.getSource();
 				int pos = Integer.parseInt(bowl.getName());
 				turn(pos, false);
+				// }
 			}
 
 		};
@@ -145,6 +148,9 @@ public class GamePanel extends JPanel {
 	// called by action listener
 	public void turn(int index, boolean top) {
 		int winner;
+		int computerTurn;
+		Random rand = new Random();
+
 		boolean goalTurn = board.distribute(index, top);
 		// returns true if landed in a goal
 
@@ -162,14 +168,29 @@ public class GamePanel extends JPanel {
 				JOptionPane.showMessageDialog(null, "Player 1 won!!");
 				break;
 			case 2:
-				JOptionPane.showMessageDialog(null, "Player 1 won!!");
+				JOptionPane.showMessageDialog(null, "Player 2 won!!");
 				break;
 			}
 			return;
 		}
 		if (!goalTurn) {
 			currentPlayer = board.switchPlayer();
+			if (computer && currentPlayer == 2) {
+				computerTurn = rand.nextInt(13 - 7) + 7;
+				while (board.getContent(computerTurn) == 0) {
+					computerTurn = rand.nextInt(13 - 7) + 7;
+				}
+				turn(computerTurn, true);
+			}
 			return;
+		}
+		currentPlayer = board.switchPlayer();
+		if (computer && currentPlayer == 2) {
+			computerTurn = rand.nextInt(13 - 7) + 7;
+			while (board.getContent(computerTurn) == 0) {
+				computerTurn = rand.nextInt(13 - 7) + 7;
+			}
+			turn(computerTurn, true);
 		}
 	}
 }

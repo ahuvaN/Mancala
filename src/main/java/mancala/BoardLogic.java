@@ -145,7 +145,7 @@ public class BoardLogic {
 				}
 				pos++;
 			}
-		} else if (!player2 && currentPlayer == 1){
+		} else if (!player2 && currentPlayer == 1) {
 			startPos = pos;
 			int amount = board[pos].removePieces();
 			bot.labels[pos].setText("0");
@@ -189,7 +189,7 @@ public class BoardLogic {
 		}
 		top.repaint();
 		bot.repaint();
-	
+
 		return checkTurn();
 	}
 
@@ -224,7 +224,6 @@ public class BoardLogic {
 				return true;
 			}
 		}
-
 		return false;
 
 	}
@@ -235,13 +234,14 @@ public class BoardLogic {
 		int amount = 0;
 		for (int i = 0; i < 6; i++) {
 			if (board[i].getCount() != 0) {
-				found = true;
+				found = true; // found pieces in the cup
 				break;
 			}
 		}
-		if (!found) {
+		if (!found) { // no pieces left in any cups
 			for (int i = 7; i < 13; i++) {
 				amount += board[i].removePieces();
+				// remove all the rest of the pieces
 			}
 			((GoalLogic) board[13]).addToGoal(amount);
 			piecesInGoal += amount;
