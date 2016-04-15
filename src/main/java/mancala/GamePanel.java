@@ -2,16 +2,14 @@ package mancala;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.BoxLayout;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -26,9 +24,9 @@ public class GamePanel extends JPanel {
 	private BottomPanel botp;
 	private MouseListener listenerTop, listenerBot;
 	private int currentPlayer;
+	private boolean computer;
 	private BoardLogic board;
 	private BoardScreen screen;
-	private boolean computer;
 
 	public GamePanel(TopPanel topP, BottomPanel botP, int p,
 			BoardScreen boardScreen, boolean cpu) {
@@ -79,8 +77,9 @@ public class GamePanel extends JPanel {
 			cupsBot[i] = new Cup(i, listenerBot, pieces);
 			bot.add(cupsBot[i]);
 		}
-		// if(computer)
-		// top.setEnabled(false);
+		/*
+		 * if (computer) { top.setEnabled(false); }
+		 */
 		add(boardGUI, BorderLayout.CENTER);
 		boardGUI.add(top);
 		boardGUI.add(bot);
@@ -114,7 +113,7 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (currentPlayer == 2 && !computer) {
+				if (!computer) {
 					Cup cup = (Cup) e.getSource();
 					int pos = Integer.parseInt(cup.getName());
 					turn(pos, cup, true);
@@ -142,11 +141,11 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (currentPlayer == 1) {
-					Cup cup = (Cup) e.getSource();
-					int pos = Integer.parseInt(cup.getName());
-					turn(pos, cup, false);
-				}
+				// if (currentPlayer == 1) {
+				Cup cup = (Cup) e.getSource();
+				int pos = Integer.parseInt(cup.getName());
+				turn(pos, cup, false);
+				// }
 			}
 
 		};
@@ -155,7 +154,11 @@ public class GamePanel extends JPanel {
 	// called by action listener
 	public void turn(int index, Cup cup, boolean top) {
 		int winner;
-		boolean goalTurn = board.distribute(index, cup, top, screen);
+		int computerTurn;
+		Random rand = new Random();
+
+		boolean goalTurn = board.distribute(index, cup, top, screen, currentPlayer);
+		// returns true if landed in a goal
 
 		int piecesAdded = board.checkForMoves();
 		if (piecesAdded != 0) {
@@ -171,14 +174,80 @@ public class GamePanel extends JPanel {
 				JOptionPane.showMessageDialog(null, "Player 1 won!!");
 				break;
 			case 2:
-				JOptionPane.showMessageDialog(null, "Player 1 won!!");
+				if (computer) {
+					JOptionPane.showMessageDialog(null, "Computer won!!");
+				} else {
+					JOptionPane.showMessageDialog(null, "Player 2 won!!");
+				}
 				break;
 			}
 			return;
 		}
 		if (!goalTurn) {
-			currentPlayer = board.switchPlayer();
-			//return;
+
+			currentPlayer = switchPlayer();
+
+			if (computer && currentPlayer == 2) {
+				computerTurn = rand.nextInt(13 - 7) + 7;
+				while (board.getContent(computerTurn) == 0) {
+					computerTurn = rand.nextInt(13 - 7) + 7;
+				}
+				System.out.println("Computer is going index " + computerTurn
+						+ " pieces: " + board.getContent(computerTurn));
+				turn(computerTurn, cup, true);
+			}
+
+			// if (computer && currentPlayer == 2) {
+			// computerTurn = rand.nextInt(6 - 0) + 0;
+			// while (board.getContent(computerTurn) == 0) {
+			// computerTurn = rand.nextInt(6 - 0) + 0;
+			// }
+			// System.out.println("Computer is going index " + computerTurn
+			// + " pieces: " + board.getContent(computerTurn));
+			// turn(computerTurn, true);
+			// }
+			return;
 		}
+		// currentPlayer = board.switchPlayer();
+		if (goalTurn) {
+
+			if (computer && currentPlayer == 2) {
+				computerTurn = rand.nextInt(13 - 7) + 7;
+				while (board.getContent(computerTurn) == 0) {
+					computerTurn = rand.nextInt(13 - 7) + 7;
+				}
+				System.out.println("Computer is going index " + computerTurn
+						+ " pieces: " + board.getContent(computerTurn));
+				turn(computerTurn, cup, true);
+			}
+
+			/*
+			 * if (computer && currentPlayer == 2) { computerTurn =
+			 * rand.nextInt(6 - 0) + 0; while (board.getContent(computerTurn) ==
+			 * 0) { computerTurn = rand.nextInt(6 - 0) + 0; }
+			 * System.out.println("Computer is going index " + computerTurn +
+			 * " pieces: " + board.getContent(computerTurn)); turn(computerTurn,
+			 * true); }
+			 */else {
+				 return;
+			 }
+		}
+		currentPlayer = switchPlayer();
+		return;
+	}
+
+	public int switchPlayer() {
+		currentPlayer = board.switchPlayer(currentPlayer);
+		if (currentPlayer == 1) {
+			topp.setEnabled(false);
+			botp.highlight();
+			topp.unHighlight();
+		} else if (currentPlayer == 2) {
+			botp.setEnabled(false);
+			topp.highlight();
+			botp.unHighlight();
+		}
+
+		return currentPlayer;
 	}
 }

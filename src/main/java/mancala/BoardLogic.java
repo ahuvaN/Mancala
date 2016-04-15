@@ -13,6 +13,7 @@ public class BoardLogic {
 	private GamePanel game;
 	private int currentPlayer;
 	private int startPos;
+	private int endPos;
 	private int piecesInGoal;// by both combined
 
 	public BoardLogic(TopPanel topP, BottomPanel botP, GamePanel gameP) {
@@ -40,8 +41,8 @@ public class BoardLogic {
 		piecesInGoal = 0;
 	}
 
-	public int switchPlayer() {
-		return currentPlayer == 1 ? 2 : 1;
+	public int switchPlayer(int player) {
+		return player == 1 ? 2 : 1;
 	}
 
 	public int getCurrentPlayer() {
@@ -87,8 +88,8 @@ public class BoardLogic {
 		return 0;
 	}
 
-	private int convertLogicToGui(int gui) {
-		switch (gui) {
+	private int convertLogicToGui(int logic) {
+		switch (logic) {
 		case 12:
 			return 0;
 		case 11:
@@ -105,14 +106,15 @@ public class BoardLogic {
 		return 0;
 	}
 
-	public boolean distribute(int pos, Cup cup, boolean player2,
-			BoardScreen screen) {
+	public boolean distribute(int pos, Cup cup, boolean player2, 
+			BoardScreen screen, int player) {
+		currentPlayer = player;
 		boolean goalLand = false;
 		ArrayList<Image> images = cup.removePieces();
 
 		if (player2 /* && currentPlayer == 2 */) {
 			startPos = pos;
-			pos = convertGuiToLogic(pos);
+			// pos = convertGuiToLogic(pos);
 			int amount = board[pos].removePieces();
 			top.labels[convertLogicToGui(pos) + 1].setText("0");
 			if (amount == 0) {
@@ -159,7 +161,7 @@ public class BoardLogic {
 				}
 				pos++;
 			}
-		} else if (!player2 /* && currentPlayer == 1 */) {
+		} else if (!player2 && currentPlayer == 1) {
 			startPos = pos;
 			int amount = board[pos].removePieces();
 			bot.labels[pos].setText("0");
@@ -209,42 +211,45 @@ public class BoardLogic {
 
 		}
 		screen.repaint();
+		endPos = pos - 1;
+		top.repaint();
+		bot.repaint();
 
-		return goalLand;// checkTurn();
+		return checkTurn();
 	}
 
-	// checks to see if landed in a goal our landed in an empty cup
+	// checks to see if landed in a goal or landed in an empty cup
 	private boolean checkTurn() {
 		int amount;
-		if (board[startPos].getCount() == 1) {
-			if (startPos > -1 && startPos < 6 && currentPlayer == 1) {
-				amount = board[startPos].removePieces();
-				amount = amount + board[Math.abs(startPos - 12)].removePieces();
+		if (board[endPos].getCount() == 1) {
+			if (endPos > -1 && endPos < 6 && currentPlayer == 1) {
+				amount = board[endPos].removePieces();
+				amount = amount + board[Math.abs(endPos - 12)].removePieces();
 				System.out.println("amount is " + amount);
 				piecesInGoal += amount;
 				((GoalLogic) board[6]).addToGoal(amount);
 				bot.labels[6].setText("" + amount);
-			} else if (startPos > 6 && startPos < 13 && currentPlayer == 2) {
-				amount = board[startPos].removePieces();
-				amount = amount + board[12 - startPos].removePieces();
+			} else if (endPos > 6 && endPos < 13 && currentPlayer == 2) {
+				amount = board[endPos].removePieces();
+				amount = amount + board[12 - endPos].removePieces();
 				System.out.println("amount is " + amount);
 				piecesInGoal += amount;
 				((GoalLogic) board[13]).addToGoal(amount);
-				top.labels[13].setText("" + amount);
+				// top.labels[13].setText("" + amount);
+				top.labels[6].setText("" + amount);
 			}
 		}
 		// if ended by a goal returns true;
-		if (startPos == 6) {
+		if (endPos == 6) {
 			if (currentPlayer == 1) {
 				return true;
 			}
 		}
-		if (startPos == 13) {
+		if (endPos == 13) {
 			if (currentPlayer == 2) {
 				return true;
 			}
 		}
-
 		return false;
 
 	}
@@ -255,7 +260,7 @@ public class BoardLogic {
 		int amount = 0;
 		for (int i = 0; i < 6; i++) {
 			if (board[i].getCount() != 0) {
-				found = true;
+				found = true; // found pieces in the cup
 				break;
 			}
 		}
