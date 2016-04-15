@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -17,24 +18,30 @@ import javax.swing.JPanel;
 public class GamePanel extends JPanel {
 
 	private JPanel boardGUI;
-	private Cup[] cupsTop;
-	private Cup[] cupsBot;
+	protected Cup[] cupsTop;
+	protected Cup[] cupsBot;
+	protected CupGoal west, east;
 	private Piece[] pieces;
 	private TopPanel topp;
 	private BottomPanel botp;
 	private MouseListener listenerTop, listenerBot;
 	private int currentPlayer;
 	private BoardLogic board;
+	private BoardScreen screen;
+	private boolean computer;
 
-	public GamePanel(TopPanel topP, BottomPanel botP, int p) {
+	public GamePanel(TopPanel topP, BottomPanel botP, int p,
+			BoardScreen boardScreen, boolean cpu) {
 		super(new BorderLayout());
 		setBackground(this);
 
 		topp = topP;
 		botp = botP;
 		currentPlayer = p;
-		board = new BoardLogic(topp, botp);
+		screen = boardScreen;
+		board = new BoardLogic(topp, botp, this);
 		pieces = new Piece[4];
+		computer = cpu;
 
 		initializePieces();
 		listeners();
@@ -80,9 +87,9 @@ public class GamePanel extends JPanel {
 	}
 
 	private void addSidePanel() {
-		CupGoal west = new CupGoal();
+		west = new CupGoal();
 		add(west, BorderLayout.WEST);
-		CupGoal east = new CupGoal();
+		east = new CupGoal();
 		add(east, BorderLayout.EAST);
 	}
 
@@ -107,9 +114,11 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				Cup bowl = (Cup) e.getSource();
-				int pos = Integer.parseInt(bowl.getName());
-				turn(pos, true);
+				if (currentPlayer == 2 && !computer) {
+					Cup cup = (Cup) e.getSource();
+					int pos = Integer.parseInt(cup.getName());
+					turn(pos, cup, true);
+				}
 			}
 		};
 
@@ -133,20 +142,20 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// if (player == 1) {
-				Cup bowl = (Cup) e.getSource();
-				int pos = Integer.parseInt(bowl.getName());
-				turn(pos, false);
+				if (currentPlayer == 1) {
+					Cup cup = (Cup) e.getSource();
+					int pos = Integer.parseInt(cup.getName());
+					turn(pos, cup, false);
+				}
 			}
 
 		};
 	}
 
 	// called by action listener
-	public void turn(int index, boolean top) {
+	public void turn(int index, Cup cup, boolean top) {
 		int winner;
-		boolean goalTurn = board.distribute(index, top);
-		// returns true if landed in a goal
+		boolean goalTurn = board.distribute(index, cup, top, screen);
 
 		int piecesAdded = board.checkForMoves();
 		if (piecesAdded != 0) {
@@ -169,7 +178,7 @@ public class GamePanel extends JPanel {
 		}
 		if (!goalTurn) {
 			currentPlayer = board.switchPlayer();
-			return;
+			//return;
 		}
 	}
 }
