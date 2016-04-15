@@ -73,8 +73,4 @@ public class BottomPanel extends JPanel {
 		repaint();
 		return currVal;
 	}
-	
-	public static void main(String[] args){
-		new BoardScreen(false).setVisible(true);
-	}
 }
