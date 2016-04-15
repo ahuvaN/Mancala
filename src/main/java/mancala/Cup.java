@@ -36,10 +36,16 @@ public class Cup extends JComponent {
 		pieces.add(image);
 	}
 
-	public void removePieces() {
-		for (Image p : pieces) {
-			pieces.remove(p);
+	public ArrayList<Image> removePieces() {
+		ArrayList<Image> images = new ArrayList<Image>();
+		while(pieces.size()>0){
+			images.add(pieces.remove(pieces.size() - 1));
 		}
+		return images;
+	}
+	
+	public Image removePiece(){
+		return pieces.remove(0);
 	}
 
 	public int count() {
@@ -81,7 +87,6 @@ public class Cup extends JComponent {
 				}
 			}
 			g.drawImage(pieces.get(i), x, y, null);
-
 		}
 	}
 }

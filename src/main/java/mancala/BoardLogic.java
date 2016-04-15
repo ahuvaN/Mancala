@@ -1,5 +1,8 @@
 package mancala;
 
+import java.awt.Image;
+import java.util.ArrayList;
+
 //logic of a computer mancala game 
 
 public class BoardLogic {
@@ -7,16 +10,18 @@ public class BoardLogic {
 	private CupLogic[] board;
 	private TopPanel top;
 	private BottomPanel bot;
+	private GamePanel game;
 	private int currentPlayer;
 	private int startPos;
 	private int piecesInGoal;// by both combined
 
-	public BoardLogic(TopPanel topP, BottomPanel botP) {
+	public BoardLogic(TopPanel topP, BottomPanel botP, GamePanel gameP) {
 		board = new CupLogic[14];
 		currentPlayer = 1;
 		piecesInGoal = 0;
 		top = topP;
 		bot = botP;
+		game = gameP;
 
 		for (int i = 0; i < board.length; i++) {
 			if (i == 6 || i == 13) {
@@ -100,10 +105,12 @@ public class BoardLogic {
 		return 0;
 	}
 
-	public boolean distribute(int pos, boolean player2) {
+	public boolean distribute(int pos, Cup cup, boolean player2,
+			BoardScreen screen) {
 		boolean goalLand = false;
+		ArrayList<Image> images = cup.removePieces();
 
-		if (player2 && currentPlayer == 2) {
+		if (player2 /* && currentPlayer == 2 */) {
 			startPos = pos;
 			pos = convertGuiToLogic(pos);
 			int amount = board[pos].removePieces();
@@ -117,25 +124,32 @@ public class BoardLogic {
 					board[pos].addPiece();
 					piecesInGoal++;
 					top.labels[0].setText(getCount(pos));
+					game.west.addPiece(images.remove(0));
 					goalLand = true;
 					pos = -1;
 				} else {
 					if (pos >= 0 && pos <= 5) {
 						board[pos].addPiece();
+						game.cupsBot[pos].addPiece(images.remove(0));
 						bot.labels[pos].setText(getCount(pos));
 					} else if (pos == 6) {
 						pos++;
 						continue;
 					} else if (pos >= 7 && pos <= 13) {
+						int guiPos = convertLogicToGui(pos);
 						board[pos].addPiece();
-						top.labels[convertLogicToGui(pos) + 1]
-								.setText(getCount(pos));
+						game.cupsTop[guiPos].addPiece(images.remove(0));
+						top.labels[guiPos + 1].setText(getCount(pos));
 					}
 					goalLand = false;
 				}
 				amount--;
 				if (amount == 0) {
 					// check if goalLand
+					if (goalLand){
+						screen.repaint();
+						return goalLand;
+					}
 					// true- go again
 					// else- return
 					// check if landed in empty spot
@@ -145,7 +159,7 @@ public class BoardLogic {
 				}
 				pos++;
 			}
-		} else if (!player2 && currentPlayer == 1){
+		} else if (!player2 /* && currentPlayer == 1 */) {
 			startPos = pos;
 			int amount = board[pos].removePieces();
 			bot.labels[pos].setText("0");
@@ -157,25 +171,32 @@ public class BoardLogic {
 				if (pos == 6) {
 					board[pos].addPiece();
 					piecesInGoal++;
+					game.east.addPiece(images.remove(0));
 					bot.labels[6].setText(getCount(pos));
 					goalLand = true;
 				} else {
 					if (pos >= 0 && pos <= 5) {
 						board[pos].addPiece();
+						game.cupsBot[pos].addPiece(images.remove(0));
 						bot.labels[pos].setText(getCount(pos));
 					} else if (pos == 13) {
 						pos = 1;
 						continue;
 					} else if (pos >= 7 && pos <= 13) {
+						int guiPos = convertLogicToGui(pos);
 						board[pos].addPiece();
-						top.labels[convertLogicToGui(pos) + 1]
-								.setText(getCount(pos));
+						game.cupsTop[guiPos].addPiece(images.remove(0));
+						top.labels[guiPos + 1].setText(getCount(pos));
 					}
 					goalLand = false;
 				}
 				amount--;
 				if (amount == 0) {
 					// check if goalLand
+					if (goalLand)	{	
+						screen.repaint();
+						return goalLand;
+					}
 					// true- go again
 					// else- return
 					// check if landed in empty spot
@@ -187,10 +208,9 @@ public class BoardLogic {
 			}
 
 		}
-		top.repaint();
-		bot.repaint();
-	
-		return checkTurn();
+		screen.repaint();
+
+		return goalLand;// checkTurn();
 	}
 
 	// checks to see if landed in a goal our landed in an empty cup
@@ -240,10 +260,18 @@ public class BoardLogic {
 			}
 		}
 		if (!found) {
+			int x = 6;
 			for (int i = 7; i < 13; i++) {
 				amount += board[i].removePieces();
+				int guiPos = convertLogicToGui(i);
+				ArrayList<Image> images = game.cupsTop[guiPos].removePieces();
+				bot.labels[x--].setText("0");
+				for (Image img : images) {
+					game.west.addPiece(img);
+				}
 			}
 			((GoalLogic) board[13]).addToGoal(amount);
+			top.labels[0].setText("" + amount);
 			piecesInGoal += amount;
 			return 2;
 		} // currentPlayer is player2
@@ -258,8 +286,14 @@ public class BoardLogic {
 		if (!found) {
 			for (int i = 0; i < 6; i++) {
 				amount += board[i].removePieces();
+				ArrayList<Image> images = game.cupsBot[i].removePieces();
+				bot.labels[i].setText("0");
+				for (Image img : images) {
+					game.east.addPiece(img);
+				}
 			}
 			((GoalLogic) board[6]).addToGoal(amount);
+			bot.labels[6].setText("" + amount);
 			piecesInGoal += amount;
 			return 1;
 		}

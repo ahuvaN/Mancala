@@ -43,7 +43,7 @@ public class BoardScreen extends JFrame {
 	private void addPanels() {
 		player2 = new TopPanel();
 		player1 = new BottomPanel();
-		board = new GamePanel(player2, player1, player);
+		board = new GamePanel(player2, player1, player, this, computer);
 		container.add(player2, BorderLayout.PAGE_START);
 		container.add(player1, BorderLayout.PAGE_END);
 		container.add(board, BorderLayout.CENTER);
