@@ -9,19 +9,22 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 public class StartScreen extends JFrame {
 
 	private JLabel pic;
 	private ImageIcon frameIcon;
 	private Image img;
-	//private BoardScreen screen;
+	private BoardScreen screen;
 
-	//@Inject
-	public StartScreen(/*BoardScreen boardScreen*/) {
+	@Inject
+	public StartScreen(BoardScreen boardScreen) {
 		setTitle("Mancala");
 		setSize(800, 615);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//screen = boardScreen;
+		screen = boardScreen;
 		pic = new JLabel();
 		pic.setBounds(0, 0, 800, 615);
 
@@ -57,13 +60,15 @@ public class StartScreen extends JFrame {
 								int y = e.getY();
 								if (x > 295 && x < 485 && y > 295 && y < 337) {
 
-									BoardScreen p = new BoardScreen(false);
-									p.setVisible(true);
+									//BoardScreen p = new BoardScreen(false);
+									screen.setComputer(false);
+									screen.setVisible(true);
 									dispose();
 								} else if (x > 321 && y > 219 && x < 479
 										&& y < 262) {
-									BoardScreen p = new BoardScreen(true);
-									p.setVisible(true);
+									//BoardScreen p = new BoardScreen(true);
+									screen.setComputer(true);
+									screen.setVisible(true);
 									dispose();
 								}
 							}
@@ -122,6 +127,7 @@ public class StartScreen extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new StartScreen();
+		Injector injector = Guice.createInjector(new MancalaModule());
+		StartScreen frame = injector.getInstance(StartScreen.class);
 	}
 }

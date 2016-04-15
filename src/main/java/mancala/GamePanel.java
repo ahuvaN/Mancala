@@ -172,8 +172,4 @@ public class GamePanel extends JPanel {
 			return;
 		}
 	}
-
-	public static void main(String[] args) {
-		new BoardScreen(false).setVisible(true);
-	}
 }
