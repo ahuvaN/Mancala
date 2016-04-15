@@ -107,11 +107,13 @@ public class GamePanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				// if (!computer && currentPlayer == 2) {
-				Cup bowl = (Cup) e.getSource();
-				int pos = Integer.parseInt(bowl.getName());
-				turn(pos, true);
-				// }
+				if (!computer) {
+					Cup bowl = (Cup) e.getSource();
+					int pos = Integer.parseInt(bowl.getName());
+					System.out.println("Bowl name = " + bowl.getName());
+					System.out.println("index: " + pos);
+					turn(pos, true);
+				}
 			}
 		};
 
@@ -138,6 +140,7 @@ public class GamePanel extends JPanel {
 				// if (currentPlayer == 1) {
 				Cup bowl = (Cup) e.getSource();
 				int pos = Integer.parseInt(bowl.getName());
+				System.out.println("Bowl name = " + bowl.getName());
 				turn(pos, false);
 				// }
 			}
@@ -151,7 +154,7 @@ public class GamePanel extends JPanel {
 		int computerTurn;
 		Random rand = new Random();
 
-		boolean goalTurn = board.distribute(index, top);
+		boolean goalTurn = board.distribute(index, top, currentPlayer);
 		// returns true if landed in a goal
 
 		int piecesAdded = board.checkForMoves();
@@ -168,29 +171,79 @@ public class GamePanel extends JPanel {
 				JOptionPane.showMessageDialog(null, "Player 1 won!!");
 				break;
 			case 2:
-				JOptionPane.showMessageDialog(null, "Player 2 won!!");
+				if (computer) {
+					JOptionPane.showMessageDialog(null, "Computer won!!");
+				} else {
+					JOptionPane.showMessageDialog(null, "Player 2 won!!");
+				}
 				break;
 			}
 			return;
 		}
 		if (!goalTurn) {
-			currentPlayer = board.switchPlayer();
+			currentPlayer = switchPlayer();
+
 			if (computer && currentPlayer == 2) {
 				computerTurn = rand.nextInt(13 - 7) + 7;
 				while (board.getContent(computerTurn) == 0) {
 					computerTurn = rand.nextInt(13 - 7) + 7;
 				}
+				System.out.println("Computer is going index " + computerTurn
+						+ " pieces: " + board.getContent(computerTurn));
 				turn(computerTurn, true);
 			}
+
+			// if (computer && currentPlayer == 2) {
+			// computerTurn = rand.nextInt(6 - 0) + 0;
+			// while (board.getContent(computerTurn) == 0) {
+			// computerTurn = rand.nextInt(6 - 0) + 0;
+			// }
+			// System.out.println("Computer is going index " + computerTurn
+			// + " pieces: " + board.getContent(computerTurn));
+			// turn(computerTurn, true);
+			// }
 			return;
 		}
-		currentPlayer = board.switchPlayer();
-		if (computer && currentPlayer == 2) {
-			computerTurn = rand.nextInt(13 - 7) + 7;
-			while (board.getContent(computerTurn) == 0) {
+		// currentPlayer = board.switchPlayer();
+		if (goalTurn) {
+
+			if (computer && currentPlayer == 2) {
 				computerTurn = rand.nextInt(13 - 7) + 7;
+				while (board.getContent(computerTurn) == 0) {
+					computerTurn = rand.nextInt(13 - 7) + 7;
+				}
+				System.out.println("Computer is going index " + computerTurn
+						+ " pieces: " + board.getContent(computerTurn));
+				turn(computerTurn, true);
 			}
-			turn(computerTurn, true);
+
+			/*
+			 * if (computer && currentPlayer == 2) { computerTurn =
+			 * rand.nextInt(6 - 0) + 0; while (board.getContent(computerTurn) ==
+			 * 0) { computerTurn = rand.nextInt(6 - 0) + 0; }
+			 * System.out.println("Computer is going index " + computerTurn +
+			 * " pieces: " + board.getContent(computerTurn)); turn(computerTurn,
+			 * true); }
+			 */else {
+				 return;
+			 }
 		}
+		currentPlayer = switchPlayer();
+		return;
+	}
+
+	public int switchPlayer() {
+		currentPlayer = board.switchPlayer(currentPlayer);
+		if (currentPlayer == 1) {
+			topp.setEnabled(false);
+			botp.highlight();
+			topp.unHighlight();
+		} else if (currentPlayer == 2) {
+			botp.setEnabled(false);
+			topp.highlight();
+			botp.unHighlight();
+		}
+
+		return currentPlayer;
 	}
 }

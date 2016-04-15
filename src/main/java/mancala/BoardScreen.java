@@ -32,16 +32,17 @@ public class BoardScreen extends JFrame {
 				.getImage());
 
 		player = 1;
-		addPanels();
+		// addPanels();
 	}
 
 	public void setComputer(boolean cpu) {
 		computer = cpu;
 	}
 
-	private void addPanels() {
+	public void addPanels() {
 		player2 = new TopPanel();
 		player1 = new BottomPanel();
+		player1.highlight();
 		board = new GamePanel(player2, player1, player, computer);
 		container.add(player2, BorderLayout.PAGE_START);
 		container.add(player1, BorderLayout.PAGE_END);

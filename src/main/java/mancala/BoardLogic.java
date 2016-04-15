@@ -9,6 +9,7 @@ public class BoardLogic {
 	private BottomPanel bot;
 	private int currentPlayer;
 	private int startPos;
+	private int endPos;
 	private int piecesInGoal;// by both combined
 
 	public BoardLogic(TopPanel topP, BottomPanel botP) {
@@ -35,8 +36,8 @@ public class BoardLogic {
 		piecesInGoal = 0;
 	}
 
-	public int switchPlayer() {
-		return currentPlayer == 1 ? 2 : 1;
+	public int switchPlayer(int player) {
+		return player == 1 ? 2 : 1;
 	}
 
 	public int getCurrentPlayer() {
@@ -82,8 +83,8 @@ public class BoardLogic {
 		return 0;
 	}
 
-	private int convertLogicToGui(int gui) {
-		switch (gui) {
+	private int convertLogicToGui(int logic) {
+		switch (logic) {
 		case 12:
 			return 0;
 		case 11:
@@ -100,12 +101,13 @@ public class BoardLogic {
 		return 0;
 	}
 
-	public boolean distribute(int pos, boolean player2) {
+	public boolean distribute(int pos, boolean player2, int player) {
+		currentPlayer = player;
 		boolean goalLand = false;
 
 		if (player2 && currentPlayer == 2) {
 			startPos = pos;
-			pos = convertGuiToLogic(pos);
+			// pos = convertGuiToLogic(pos);
 			int amount = board[pos].removePieces();
 			top.labels[convertLogicToGui(pos) + 1].setText("0");
 			if (amount == 0) {
@@ -187,39 +189,42 @@ public class BoardLogic {
 			}
 
 		}
+		endPos = pos - 1;
+		// startPos = pos - 1;
 		top.repaint();
 		bot.repaint();
 
 		return checkTurn();
 	}
 
-	// checks to see if landed in a goal our landed in an empty cup
+	// checks to see if landed in a goal or landed in an empty cup
 	private boolean checkTurn() {
 		int amount;
-		if (board[startPos].getCount() == 1) {
-			if (startPos > -1 && startPos < 6 && currentPlayer == 1) {
-				amount = board[startPos].removePieces();
-				amount = amount + board[Math.abs(startPos - 12)].removePieces();
+		if (board[endPos].getCount() == 1) {
+			if (endPos > -1 && endPos < 6 && currentPlayer == 1) {
+				amount = board[endPos].removePieces();
+				amount = amount + board[Math.abs(endPos - 12)].removePieces();
 				System.out.println("amount is " + amount);
 				piecesInGoal += amount;
 				((GoalLogic) board[6]).addToGoal(amount);
 				bot.labels[6].setText("" + amount);
-			} else if (startPos > 6 && startPos < 13 && currentPlayer == 2) {
-				amount = board[startPos].removePieces();
-				amount = amount + board[12 - startPos].removePieces();
+			} else if (endPos > 6 && endPos < 13 && currentPlayer == 2) {
+				amount = board[endPos].removePieces();
+				amount = amount + board[12 - endPos].removePieces();
 				System.out.println("amount is " + amount);
 				piecesInGoal += amount;
 				((GoalLogic) board[13]).addToGoal(amount);
-				top.labels[13].setText("" + amount);
+				// top.labels[13].setText("" + amount);
+				top.labels[6].setText("" + amount);
 			}
 		}
 		// if ended by a goal returns true;
-		if (startPos == 6) {
+		if (endPos == 6) {
 			if (currentPlayer == 1) {
 				return true;
 			}
 		}
-		if (startPos == 13) {
+		if (endPos == 13) {
 			if (currentPlayer == 2) {
 				return true;
 			}
