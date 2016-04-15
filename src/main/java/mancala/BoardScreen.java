@@ -12,12 +12,12 @@ public class BoardScreen extends JFrame {
 	private Container container;
 	private TopPanel player2;
 	private BottomPanel player1; 
-	private CenterPanel board;
+	private GamePanel board;
 	private int player;
-	//private boolean computer;
+	private boolean computer;
 
 	
-	public BoardScreen(/*boolean cpu*/) {
+	public BoardScreen(boolean cpu) {
 		setTitle("Mancala");
 		setSize(1100, 800);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,6 +32,7 @@ public class BoardScreen extends JFrame {
 		setIconImage(new ImageIcon(getClass().getResource("/mancala.jpg"))
 		.getImage());
 
+		computer = cpu;
 		player = 1;
 		addPanels();
 	}
@@ -39,7 +40,7 @@ public class BoardScreen extends JFrame {
 	private void addPanels() {
 		player2 = new TopPanel();
 		player1 = new BottomPanel();
-		board = new CenterPanel(player2, player1, player);
+		board = new GamePanel(player2, player1, player);
 		container.add(player2, BorderLayout.PAGE_START);
 		container.add(player1, BorderLayout.PAGE_END);
 		container.add(board, BorderLayout.CENTER);

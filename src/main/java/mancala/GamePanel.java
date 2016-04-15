@@ -14,28 +14,28 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-public class CenterPanel extends JPanel {
+public class GamePanel extends JPanel {
 
 	private JPanel boardGUI;
-	private Bowl[] cupsTop;
-	private Bowl[] cupsBot;
+	private Cup[] cupsTop;
+	private Cup[] cupsBot;
 	private Piece[] pieces;
 	private TopPanel topp;
 	private BottomPanel botp;
 	private MouseListener listenerTop, listenerBot;
 	private int currentPlayer;
-	private Board board;
+	private BoardLogic board;
 
-	public CenterPanel(TopPanel topP, BottomPanel botP, int p) {
+	public GamePanel(TopPanel topP, BottomPanel botP, int p) {
 		super(new BorderLayout());
 		setBackground(this);
 
 		topp = topP;
 		botp = botP;
 		currentPlayer = p;
-		board = new Board();
+		board = new BoardLogic(topp, botp);
 		pieces = new Piece[4];
-		
+
 		initializePieces();
 		listeners();
 		setUpLayout();
@@ -59,27 +59,30 @@ public class CenterPanel extends JPanel {
 		boardGUI.setLayout(new BoxLayout(boardGUI, BoxLayout.Y_AXIS));
 		setBackground(boardGUI);
 
-		JPanel top = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 30), 300, 210);
+		JPanel top = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 30), 300,
+				210);
 		JPanel bot = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 0), 300, 200);
 
-		cupsTop = new Bowl[6];
-		cupsBot = new Bowl[6];
+		cupsTop = new Cup[6];
+		cupsBot = new Cup[6];
 
 		for (int i = 0; i < 6; i++) {
-			cupsTop[i] = new Bowl(i, listenerTop, pieces);
+			cupsTop[i] = new Cup(i, listenerTop, pieces);
 			top.add(cupsTop[i]);
-			cupsBot[i] = new Bowl(i, listenerBot, pieces);
+			cupsBot[i] = new Cup(i, listenerBot, pieces);
 			bot.add(cupsBot[i]);
 		}
+		// if(computer)
+		// top.setEnabled(false);
 		add(boardGUI, BorderLayout.CENTER);
 		boardGUI.add(top);
 		boardGUI.add(bot);
 	}
 
 	private void addSidePanel() {
-		BowlGoal west = new BowlGoal();
+		CupGoal west = new CupGoal();
 		add(west, BorderLayout.WEST);
-		BowlGoal east = new BowlGoal();
+		CupGoal east = new CupGoal();
 		add(east, BorderLayout.EAST);
 	}
 
@@ -104,18 +107,9 @@ public class CenterPanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//if (player == 2) {
-					Bowl bowl = (Bowl) e.getSource();
-					int pos = Integer.parseInt(bowl.getName()) + 1;
-					int pieces = topp.reset(pos--);
-					turn(pos);
-					/*while (pieces > 0 && pos >= 0) {
-						topp.addValue(pos--);
-						pieces--;
-					}*/
-					//board.checkForExtraMoves();
-				//	player = 1;
-				//}
+				Cup bowl = (Cup) e.getSource();
+				int pos = Integer.parseInt(bowl.getName());
+				turn(pos, true);
 			}
 		};
 
@@ -139,34 +133,25 @@ public class CenterPanel extends JPanel {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//if (player == 1) {
-					Bowl bowl = (Bowl) e.getSource();
-					int pos = Integer.parseInt(bowl.getName());
-					int pieces = botp.reset(pos++);
-					while (pieces > 0 && pos < 7) {
-						botp.addValue(pos++);
-						pieces--;
-					}
-					//turn();
-				//	player = 2;
-				//}
+				// if (player == 1) {
+				Cup bowl = (Cup) e.getSource();
+				int pos = Integer.parseInt(bowl.getName());
+				turn(pos, false);
 			}
 
 		};
 	}
 
 	// called by action listener
-	public void turn(int index) {
+	public void turn(int index, boolean top) {
 		int winner;
-		boolean goalTurn = board.distribute(index);
+		boolean goalTurn = board.distribute(index, top);
 		// returns true if landed in a goal
-		repaint();
 
 		int piecesAdded = board.checkForMoves();
 		if (piecesAdded != 0) {
-			JOptionPane.showMessageDialog(null, 
+			JOptionPane.showMessageDialog(null,
 					"Left over pieces added to other player's goal!!");
-			repaint();
 		}
 		if (board.checkGame()) {
 			winner = board.calculateWinner();
@@ -180,18 +165,15 @@ public class CenterPanel extends JPanel {
 				JOptionPane.showMessageDialog(null, "Player 1 won!!");
 				break;
 			}
-			repaint();
 			return;
 		}
 		if (!goalTurn) {
 			currentPlayer = board.switchPlayer();
-			//disableCups();
-			repaint();
 			return;
 		}
 	}
 
 	public static void main(String[] args) {
-		new BoardScreen().setVisible(true);
+		new BoardScreen(false).setVisible(true);
 	}
 }

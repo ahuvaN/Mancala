@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.LayoutManager;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,7 +17,7 @@ import javax.swing.SwingConstants;
 public class BottomPanel extends JPanel {
 
 	private JPanel pieceInfo;
-	private JLabel[] labels;
+	protected JLabel[] labels;
 	private JLabel player1;
 	private Font f;
 
@@ -31,7 +33,11 @@ public class BottomPanel extends JPanel {
 	}
 
 	private void addPieceInfo() {
-		player1 = new JLabel("Player 1 > > >", SwingConstants.LEFT);
+		String repeat = IntStream.range(0, 55)
+				  .mapToObj(x -> "> ")
+				  .collect(Collectors.joining());		
+		player1 = new JLabel("Player 1 " + repeat, 
+				SwingConstants.LEFT);
 		player1.setPreferredSize(new Dimension(40, 65));
 		player1.setForeground(Color.YELLOW);
 		player1.setFont(f);
@@ -69,6 +75,6 @@ public class BottomPanel extends JPanel {
 	}
 	
 	public static void main(String[] args){
-		new BoardScreen().setVisible(true);
+		new BoardScreen(false).setVisible(true);
 	}
 }
