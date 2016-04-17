@@ -19,14 +19,16 @@ public class TopPanel extends JPanel {
 	private JLabel player2;
 	private String repeat;
 	private Font f;
+	private boolean computer;
 
-	public TopPanel() {
+	public TopPanel(boolean cpu) {
 		super(new BorderLayout());
 		setBackground(new Color(0, 0, 0, 0));
 		setOpaque(false);
 
 		f = new Font("Arial", Font.BOLD, 20);
 		labels = new JLabel[7];
+		computer = cpu;
 
 		addPieceInfo();
 	}
@@ -34,7 +36,10 @@ public class TopPanel extends JPanel {
 	private void addPieceInfo() {
 		repeat = IntStream.range(0, 56).mapToObj(x -> "< ")
 				.collect(Collectors.joining());
-		player2 = new JLabel(repeat + "Player 2");
+		if (computer)
+			player2 = new JLabel(repeat + "< < CPU");
+		else
+			player2 = new JLabel(repeat + "Player 2");
 		player2.setPreferredSize(new Dimension(40, 45));
 		player2.setForeground(Color.YELLOW);
 		player2.setFont(f);
@@ -71,10 +76,6 @@ public class TopPanel extends JPanel {
 		player2.setBorder(BorderFactory.createEmptyBorder());
 	}
 
-	public void setComputerLabel(){
-		player2.setText(repeat + "CPU");
-	}
-	
 	public void addValue(int position) {
 		int currVal = Integer.parseInt(labels[position].getText());
 		labels[position].setText(String.valueOf(++currVal));

@@ -24,6 +24,8 @@ public class StartScreen extends JFrame {
 		setTitle("Mancala");
 		setSize(800, 615);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setLocationRelativeTo(null);
+
 		screen = boardScreen;
 		pic = new JLabel();
 		pic.setBounds(0, 0, 800, 615);
@@ -36,7 +38,7 @@ public class StartScreen extends JFrame {
 		setVisible(true);
 		setResizable(false);
 		setLayout(null);
-
+		
 		try {
 			Thread.sleep(700);
 			changeIcon("/play.jpg");
@@ -69,6 +71,8 @@ public class StartScreen extends JFrame {
 									screen.addPanels();
 									screen.setVisible(true);
 									dispose();
+								}else if (x > 735 && x < 775 && y > 510 && y < 550){
+									System.exit(0);
 								}
 							}
 
@@ -88,6 +92,9 @@ public class StartScreen extends JFrame {
 							public void mouseReleased(MouseEvent e) {
 							}
 						});
+					}
+					else if (x > 735 && x < 775 && y > 545 && y < 585){
+						System.exit(0);
 					}
 				}
 

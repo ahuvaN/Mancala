@@ -36,7 +36,7 @@ public class BoardScreen extends JFrame {
 	}
 
 	public void addPanels() {
-		player2 = new TopPanel();
+		player2 = new TopPanel(computer);
 		player1 = new BottomPanel();
 		board = new GamePanel(player2, player1, this, computer);
 		

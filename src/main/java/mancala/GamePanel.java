@@ -3,8 +3,8 @@ package mancala;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Random;
@@ -12,18 +12,18 @@ import java.util.Random;
 import javax.swing.BoxLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 public class GamePanel extends JPanel {
 
-	private JPanel boardGUI;
-	protected Cup[] cupsTop;
-	protected Cup[] cupsBot;
+	private JPanel boardGUI, top, bot;
+	protected Cup[] cupsTop, cupsBot;
 	protected CupGoal west, east;
 	private Piece[] pieces;
 	private TopPanel topp;
 	private BottomPanel botp;
 	private MouseListener listenerTop, listenerBot;
-	private int currentPlayer;
+	private int currentPlayer, computerTurn;
 	private boolean computer;
 	private BoardLogic board;
 	private BoardScreen screen;
@@ -64,9 +64,8 @@ public class GamePanel extends JPanel {
 		boardGUI.setLayout(new BoxLayout(boardGUI, BoxLayout.Y_AXIS));
 		setBackground(boardGUI);
 
-		JPanel top = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 30), 300,
-				210);
-		JPanel bot = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 0), 300, 200);
+		top = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 30), 300, 210);
+		bot = new Panel(new FlowLayout(FlowLayout.LEFT, 17, 0), 300, 200);
 
 		cupsTop = new Cup[6];
 		cupsBot = new Cup[6];
@@ -114,7 +113,7 @@ public class GamePanel extends JPanel {
 
 				@Override
 				public void mousePressed(MouseEvent e) {
-					if (!computer || currentPlayer == 2) {
+					if (!computer && currentPlayer == 2) {
 						Cup cup = (Cup) e.getSource();
 						turn(cup, true);
 					}
@@ -152,17 +151,17 @@ public class GamePanel extends JPanel {
 	// called by action listener
 	public void turn(Cup cup, boolean top) {
 		int winner;
-		int computerTurn;
 		Random rand = new Random();
 
 		boolean goAgain = board.distribute(cup, top, screen);
 		// returns true if landed in a goal
 
-		int piecesAdded = board.checkForMoves();
+		String player = board.checkForMoves();
 		screen.repaint();
-		if (piecesAdded != 0) {
-			JOptionPane.showMessageDialog(null,
-					"Left over pieces added to other player's goal!!");
+		if (player != null) {
+			player = player == "Player 2" && computer ? "CPU" : player;
+			JOptionPane.showMessageDialog(null, "Left over pieces added to "
+					+ player + "'s goal!!");
 		}
 		if (board.checkGame()) {
 			winner = board.calculateWinner();
@@ -180,26 +179,43 @@ public class GamePanel extends JPanel {
 				}
 				break;
 			}
+			screen.dispose();
+			new StartScreen(new BoardScreen()).setVisible(true);
 			return;
 		}
 		if (!goAgain) {
 			currentPlayer = switchPlayer();
 			if (computer && currentPlayer == 2) {
 				computerTurn = rand.nextInt(6 - 0) + 0;
-				while (board.getContent(computerTurn) == 0) {
+				while (cupsTop[computerTurn].count() == 0) {
 					computerTurn = rand.nextInt(6 - 0) + 0;
 				}
-				turn(cupsTop[computerTurn], true);
+				Timer timer = new Timer(1500, new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						turn(cupsTop[computerTurn], true);
+					}
+				});
+				timer.setRepeats(false);
+				timer.start();
 			}
 			return;
 		} else { // goAgain
-
 			if (computer && currentPlayer == 2) {
 				computerTurn = rand.nextInt(6 - 0) + 0;
-				while (board.getContent(computerTurn) == 0) {
+				while (cupsTop[computerTurn].count() == 0) {
 					computerTurn = rand.nextInt(6 - 0) + 0;
 				}
-				turn(cupsTop[computerTurn], true);
+				Timer timer = new Timer(1500, new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent arg0) {
+						turn(cupsTop[computerTurn], true);
+					}
+				});
+				timer.setRepeats(false);
+				timer.start();
 			} else {
 				return;
 			}
